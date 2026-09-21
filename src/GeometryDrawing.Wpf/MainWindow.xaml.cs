@@ -41,6 +41,18 @@ public partial class MainWindow : Window
         StatusText.Text = "Создан случайный треугольник.";
     }
 
+    private void RandomRectangle_Click(object sender, RoutedEventArgs e)
+    {
+        int width = _random.Next(70, 230);
+        int height = _random.Next(70, 230);
+        int x = _random.Next(ScenePadding, SceneWidth - ScenePadding - width);
+        int y = _random.Next(ScenePadding, SceneHeight - ScenePadding - height);
+
+        _currentFigure = new RectangleFigure(new Point2D(x, y), width, height);
+        DrawCurrentFigure();
+        StatusText.Text = $"Создан прямоугольник {width} × {height}.";
+    }
+
     private void ClearScene_Click(object sender, RoutedEventArgs e)
     {
         Scene.Children.Clear();
@@ -63,6 +75,10 @@ public partial class MainWindow : Window
         {
             DrawTriangle(triangle);
         }
+        else if (_currentFigure is RectangleFigure rectangle)
+        {
+            DrawRectangle(rectangle);
+        }
     }
 
     private void DrawTriangle(Triangle triangle)
@@ -70,6 +86,14 @@ public partial class MainWindow : Window
         DrawLine(triangle.P1, triangle.P2);
         DrawLine(triangle.P2, triangle.P3);
         DrawLine(triangle.P3, triangle.P1);
+    }
+
+    private void DrawRectangle(RectangleFigure rectangle)
+    {
+        DrawLine(rectangle.P1, rectangle.P2);
+        DrawLine(rectangle.P2, rectangle.P3);
+        DrawLine(rectangle.P3, rectangle.P4);
+        DrawLine(rectangle.P4, rectangle.P1);
     }
 
     private void DrawLine(Point2D p1, Point2D p2)
