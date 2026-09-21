@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using GeometryDrawing.Core;
@@ -41,6 +42,34 @@ public partial class MainWindow : Window
         StatusText.Text = "Создан случайный треугольник.";
     }
 
+    private void ManualTriangle_Click(object sender, RoutedEventArgs e)
+    {
+        if (!TryReadPoint(P1XTextBox, P1YTextBox, "P1", out Point2D p1)
+            || !TryReadPoint(P2XTextBox, P2YTextBox, "P2", out Point2D p2)
+            || !TryReadPoint(P3XTextBox, P3YTextBox, "P3", out Point2D p3))
+        {
+            return;
+        }
+
+        try
+        {
+            var triangle = new Triangle(p1, p2, p3);
+            if (!IsInsideScene(triangle))
+            {
+                ShowValidationError("Все точки должны находиться внутри холста 680 × 520.");
+                return;
+            }
+
+            _currentFigure = triangle;
+            DrawCurrentFigure();
+            StatusText.Text = "Создан треугольник по заданным точкам.";
+        }
+        catch (ArgumentException exception)
+        {
+            ShowValidationError(exception.Message);
+        }
+    }
+
     private void RandomRectangle_Click(object sender, RoutedEventArgs e)
     {
         int width = _random.Next(70, 230);
@@ -51,6 +80,27 @@ public partial class MainWindow : Window
         _currentFigure = new RectangleFigure(new Point2D(x, y), width, height);
         DrawCurrentFigure();
         StatusText.Text = $"Создан прямоугольник {width} × {height}.";
+    }
+
+    private void ManualRectangle_Click(object sender, RoutedEventArgs e)
+    {
+        CreateManualRectangle(isSquare: false);
+    }
+
+    private void ManualSquare_Click(object sender, RoutedEventArgs e)
+    {
+        CreateManualRectangle(isSquare: true);
+    }
+
+    private void RandomSquare_Click(object sender, RoutedEventArgs e)
+    {
+        int side = _random.Next(70, 230);
+        int x = _random.Next(ScenePadding, SceneWidth - ScenePadding - side);
+        int y = _random.Next(ScenePadding, SceneHeight - ScenePadding - side);
+
+        _currentFigure = RectangleFigure.CreateSquare(new Point2D(x, y), side);
+        DrawCurrentFigure();
+        StatusText.Text = $"Создан квадрат со стороной {side}.";
     }
 
     private void ClearScene_Click(object sender, RoutedEventArgs e)
@@ -65,6 +115,120 @@ public partial class MainWindow : Window
         return new Point2D(
             _random.Next(ScenePadding, SceneWidth - ScenePadding),
             _random.Next(ScenePadding, SceneHeight - ScenePadding));
+    }
+
+    private void CreateManualRectangle(bool isSquare)
+    {
+        if (!TryReadInteger(RectangleXTextBox, "X", out int x)
+            || !TryReadInteger(RectangleYTextBox, "Y", out int y))
+        {
+            return;
+        }
+
+        int width;
+        int height;
+        if (isSquare)
+        {
+            if (!TryReadPositiveInteger(SquareSideTextBox, "Сторона квадрата", out int side))
+            {
+                return;
+            }
+
+            width = side;
+            height = side;
+        }
+        else
+        {
+            if (!TryReadPositiveInteger(RectangleWidthTextBox, "Ширина", out width)
+                || !TryReadPositiveInteger(RectangleHeightTextBox, "Высота", out height))
+            {
+                return;
+            }
+        }
+
+        try
+        {
+            var rectangle = new RectangleFigure(new Point2D(x, y), width, height);
+            if (!IsInsideScene(rectangle))
+            {
+                ShowValidationError("Фигура должна полностью находиться внутри холста 680 × 520.");
+                return;
+            }
+
+            _currentFigure = rectangle;
+            DrawCurrentFigure();
+            StatusText.Text = isSquare
+                ? $"Создан квадрат со стороной {width}."
+                : $"Создан прямоугольник {width} × {height}.";
+        }
+        catch (ArgumentException exception)
+        {
+            ShowValidationError(exception.Message);
+        }
+        catch (OverflowException)
+        {
+            ShowValidationError("Введённые значения слишком велики.");
+        }
+    }
+
+    private bool TryReadPoint(
+        TextBox xTextBox,
+        TextBox yTextBox,
+        string pointName,
+        out Point2D point)
+    {
+        point = null!;
+        if (!TryReadInteger(xTextBox, $"{pointName}.X", out int x)
+            || !TryReadInteger(yTextBox, $"{pointName}.Y", out int y))
+        {
+            return false;
+        }
+
+        point = new Point2D(x, y);
+        return true;
+    }
+
+    private bool TryReadPositiveInteger(TextBox textBox, string fieldName, out int value)
+    {
+        if (!TryReadInteger(textBox, fieldName, out value))
+        {
+            return false;
+        }
+
+        if (value <= 0)
+        {
+            ShowValidationError($"Поле «{fieldName}» должно быть больше нуля.");
+            textBox.Focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool TryReadInteger(TextBox textBox, string fieldName, out int value)
+    {
+        if (int.TryParse(textBox.Text, out value))
+        {
+            return true;
+        }
+
+        ShowValidationError($"Поле «{fieldName}» должно содержать целое число.");
+        textBox.Focus();
+        textBox.SelectAll();
+        return false;
+    }
+
+    private static bool IsInsideScene(IFigure figure)
+    {
+        return figure.Points.All(point =>
+            point.X >= 0 && point.X <= SceneWidth
+            && point.Y >= 0 && point.Y <= SceneHeight);
+    }
+
+    private void ShowValidationError(string message)
+    {
+        StatusText.Text = message;
+        MessageBox.Show(this, message, "Проверьте данные", MessageBoxButton.OK, MessageBoxImage.Warning);
     }
 
     private void DrawCurrentFigure()

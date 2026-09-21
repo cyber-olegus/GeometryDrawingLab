@@ -39,13 +39,17 @@ public sealed class RectangleFigure : IFigure
 
         Width = width;
         Height = height;
-        _points =
-        [
-            startPoint,
-            new Point2D(startPoint.X + width, startPoint.Y),
-            new Point2D(startPoint.X + width, startPoint.Y + height),
-            new Point2D(startPoint.X, startPoint.Y + height)
-        ];
+
+        checked
+        {
+            _points =
+            [
+                startPoint,
+                new Point2D(startPoint.X + width, startPoint.Y),
+                new Point2D(startPoint.X + width, startPoint.Y + height),
+                new Point2D(startPoint.X, startPoint.Y + height)
+            ];
+        }
     }
 
     public static RectangleFigure CreateSquare(Point2D startPoint, int side)
@@ -69,4 +73,3 @@ public sealed class RectangleFigure : IFigure
         }
     }
 }
-
