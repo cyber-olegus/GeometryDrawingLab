@@ -7,6 +7,8 @@
 ```powershell
 git clone GeometryDrawingLab.bundle GeometryDrawingLab
 cd GeometryDrawingLab
+git branch feature/rectangle origin/feature/rectangle
+git branch feature/move-shapes origin/feature/move-shapes
 git switch main
 ```
 
@@ -33,7 +35,7 @@ git config user.email "почта-из-профиля-github@example.com"
 Не добавляйте через GitHub README, `.gitignore` или лицензию: они уже есть в проекте. Затем подключите удалённый репозиторий:
 
 ```powershell
-git remote add origin https://github.com/USERNAME/GeometryDrawingLab.git
+git remote set-url origin https://github.com/USERNAME/GeometryDrawingLab.git
 git push -u origin main
 git push -u origin feature/rectangle
 git push -u origin feature/move-shapes
@@ -97,4 +99,3 @@ git push -u origin feature/короткое-название
 8. ручной ввод и квадрат;
 9. безопасное перемещение в ветке `feature/move-shapes`;
 10. элементы управления перемещением.
-
