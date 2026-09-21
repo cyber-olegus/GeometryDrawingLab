@@ -20,6 +20,17 @@
                        Foreground="#5B6472"
                        Text="Создавайте и перемещайте фигуры на холсте."
                        TextWrapping="Wrap" />
+            <GroupBox Margin="0,0,0,12" Header="Треугольник">
+                <StackPanel Margin="10">
+                    <TextBlock Margin="0,0,0,10"
+                               Foreground="#5B6472"
+                               Text="Три вершины будут выбраны случайно."
+                               TextWrapping="Wrap" />
+                    <Button Height="38"
+                            Content="Случайный треугольник"
+                            Click="RandomTriangle_Click" />
+                </StackPanel>
+            </GroupBox>
             <Button Height="38" Content="Очистить холст" Click="ClearScene_Click" />
             <TextBlock x:Name="StatusText"
                        Margin="0,18,0,0"
@@ -42,4 +53,3 @@
         </Border>
     </Grid>
 </Window>
-
