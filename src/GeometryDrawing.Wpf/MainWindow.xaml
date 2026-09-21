@@ -98,6 +98,39 @@
                     </StackPanel>
                 </GroupBox>
 
+                <GroupBox Margin="0,0,0,12" Header="Перемещение">
+                    <StackPanel Margin="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center" Text="ΔX" />
+                            <TextBox x:Name="MoveXTextBox" Grid.Column="1" Text="10" />
+                            <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="ΔY" />
+                            <TextBox x:Name="MoveYTextBox" Grid.Column="3" Text="10" />
+                        </Grid>
+                        <Button Content="Переместить на ΔX и ΔY" Click="MoveFigure_Click" />
+                        <Grid Margin="68,4,68,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Button Grid.Column="1" Content="↑" Tag="0;-10" Click="NudgeFigure_Click" />
+                            <Button Grid.Row="1" Content="←" Tag="-10;0" Click="NudgeFigure_Click" />
+                            <Button Grid.Row="1" Grid.Column="1" Content="↓" Tag="0;10" Click="NudgeFigure_Click" />
+                            <Button Grid.Row="1" Grid.Column="2" Content="→" Tag="10;0" Click="NudgeFigure_Click" />
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+
                 <Button Content="Очистить холст" Click="ClearScene_Click" />
                 <Border Margin="0,12,0,0" Padding="10" Background="#EEF2FF" CornerRadius="6">
                     <TextBlock x:Name="StatusText"
