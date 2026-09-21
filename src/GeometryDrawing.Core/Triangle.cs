@@ -44,8 +44,7 @@ public sealed class Triangle : IFigure
 
     private static long SignedDoubleArea(Point2D p1, Point2D p2, Point2D p3)
     {
-        return (long)(p2.X - p1.X) * (p3.Y - p1.Y)
-             - (long)(p2.Y - p1.Y) * (p3.X - p1.X);
+        return ((long)p2.X - p1.X) * ((long)p3.Y - p1.Y)
+             - ((long)p2.Y - p1.Y) * ((long)p3.X - p1.X);
     }
 }
-
