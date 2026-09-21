@@ -1,0 +1,45 @@
+<Window x:Class="GeometryDrawing.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Геометрические фигуры"
+        Width="1100"
+        Height="680"
+        MinWidth="900"
+        MinHeight="560"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <TextBlock FontSize="24" FontWeight="SemiBold" Text="Панель фигур" />
+            <TextBlock Margin="0,6,0,18"
+                       Foreground="#5B6472"
+                       Text="Создавайте и перемещайте фигуры на холсте."
+                       TextWrapping="Wrap" />
+            <Button Height="38" Content="Очистить холст" Click="ClearScene_Click" />
+            <TextBlock x:Name="StatusText"
+                       Margin="0,18,0,0"
+                       Foreground="#334155"
+                       Text="Выберите фигуру."
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <Border Grid.Column="2"
+                Background="White"
+                BorderBrush="#CBD5E1"
+                BorderThickness="1"
+                CornerRadius="8">
+            <Canvas x:Name="Scene"
+                    Width="680"
+                    Height="520"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="#F8FAFC" />
+        </Border>
+    </Grid>
+</Window>
+
