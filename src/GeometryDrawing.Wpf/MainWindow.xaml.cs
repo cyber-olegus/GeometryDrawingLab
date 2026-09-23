@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using GeometryDrawing.Core;
@@ -14,10 +15,37 @@ public partial class MainWindow : Window
 
     private readonly Random _random = new();
     private IFigure? _currentFigure;
+    private Brush _lineBrush = Brushes.IndianRed;
+    private double _strokeThickness = 3;
 
     public MainWindow()
     {
         InitializeComponent();
+        LineColorComboBox.SelectionChanged += FigureStyle_Changed;
+        StrokeThicknessSlider.ValueChanged += FigureStyle_Changed;
+    }
+
+    private void FigureStyle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (LineColorComboBox.SelectedItem is ComboBoxItem { Tag: string colorName })
+        {
+            _lineBrush = colorName switch
+            {
+                "RoyalBlue" => Brushes.RoyalBlue,
+                "SeaGreen" => Brushes.SeaGreen,
+                "DarkViolet" => Brushes.DarkViolet,
+                "Black" => Brushes.Black,
+                _ => Brushes.IndianRed
+            };
+        }
+
+        _strokeThickness = StrokeThicknessSlider.Value;
+        DrawCurrentFigure();
+
+        if (_currentFigure is not null)
+        {
+            StatusText.Text = $"Стиль обновлён: толщина {_strokeThickness:0}.";
+        }
     }
 
     private void RandomTriangle_Click(object sender, RoutedEventArgs e)
@@ -130,10 +158,37 @@ public partial class MainWindow : Window
         }
     }
 
+    private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        // Не перехватываем клавиши, пока пользователь редактирует поле или настройку.
+        if (Keyboard.FocusedElement is TextBox or ComboBox or Slider)
+        {
+            return;
+        }
+
+        (int deltaX, int deltaY) = e.Key switch
+        {
+            Key.Left or Key.A => (-10, 0),
+            Key.Right or Key.D => (10, 0),
+            Key.Up or Key.W => (0, -10),
+            Key.Down or Key.S => (0, 10),
+            _ => (0, 0)
+        };
+
+        if (deltaX == 0 && deltaY == 0)
+        {
+            return;
+        }
+
+        MoveCurrentFigure(deltaX, deltaY);
+        e.Handled = true;
+    }
+
     private void ClearScene_Click(object sender, RoutedEventArgs e)
     {
         Scene.Children.Clear();
         _currentFigure = null;
+        UpdateCoordinatesText();
         StatusText.Text = "Холст очищен.";
     }
 
@@ -293,6 +348,22 @@ public partial class MainWindow : Window
         {
             DrawRectangle(rectangle);
         }
+
+        UpdateCoordinatesText();
+    }
+
+    private void UpdateCoordinatesText()
+    {
+        if (_currentFigure is null)
+        {
+            CoordinatesText.Text = "Фигура не выбрана.";
+            return;
+        }
+
+        string coordinates = string.Join(
+            "   ",
+            _currentFigure.Points.Select((point, index) => $"P{index + 1}: ({point.X}; {point.Y})"));
+        CoordinatesText.Text = coordinates;
     }
 
     private void DrawTriangle(Triangle triangle)
@@ -314,8 +385,8 @@ public partial class MainWindow : Window
     {
         var line = new Line
         {
-            Stroke = Brushes.IndianRed,
-            StrokeThickness = 3,
+            Stroke = _lineBrush,
+            StrokeThickness = _strokeThickness,
             StrokeStartLineCap = PenLineCap.Round,
             StrokeEndLineCap = PenLineCap.Round,
             X1 = p1.X,

@@ -6,6 +6,7 @@
         Height="720"
         MinWidth="1060"
         MinHeight="640"
+        PreviewKeyDown="Window_PreviewKeyDown"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Button">
@@ -113,6 +114,10 @@
                             <TextBox x:Name="MoveYTextBox" Grid.Column="3" Text="15" />
                         </Grid>
                         <Button Content="Переместить на ΔX и ΔY" Click="MoveFigure_Click" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="#64748B"
+                                   Text="Клавиатура: стрелки или W/A/S/D"
+                                   TextAlignment="Center" />
                         <Grid Margin="68,4,68,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -131,6 +136,38 @@
                     </StackPanel>
                 </GroupBox>
 
+                <GroupBox Margin="0,0,0,12" Header="Оформление фигуры">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="Цвет линий" />
+                        <ComboBox x:Name="LineColorComboBox"
+                                  Height="30"
+                                  Margin="0,4,0,10"
+                                  SelectedIndex="0">
+                            <ComboBoxItem Tag="IndianRed" Content="Красный" />
+                            <ComboBoxItem Tag="RoyalBlue" Content="Синий" />
+                            <ComboBoxItem Tag="SeaGreen" Content="Зелёный" />
+                            <ComboBoxItem Tag="DarkViolet" Content="Фиолетовый" />
+                            <ComboBoxItem Tag="Black" Content="Чёрный" />
+                        </ComboBox>
+
+                        <DockPanel>
+                            <TextBlock VerticalAlignment="Center" Text="Толщина линий" />
+                            <TextBlock Margin="8,0,0,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding ElementName=StrokeThicknessSlider, Path=Value, StringFormat={}{0:0}}" />
+                        </DockPanel>
+                        <Slider x:Name="StrokeThicknessSlider"
+                                Margin="0,6,0,0"
+                                Minimum="1"
+                                Maximum="10"
+                                Value="3"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True" />
+                    </StackPanel>
+                </GroupBox>
+
                 <Button Content="Очистить холст" Click="ClearScene_Click" />
                 <Border Margin="0,12,0,0" Padding="10" Background="#EEF2FF" CornerRadius="6">
                     <TextBlock x:Name="StatusText"
@@ -146,12 +183,25 @@
                 BorderBrush="#CBD5E1"
                 BorderThickness="1"
                 CornerRadius="8">
-            <Canvas x:Name="Scene"
-                    Width="680"
-                    Height="520"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="#F8FAFC" />
+            <Grid>
+                <Canvas x:Name="Scene"
+                        Width="680"
+                        Height="520"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="#F8FAFC" />
+                <Border Margin="12"
+                        Padding="8,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Background="#E6FFFFFF"
+                        CornerRadius="5"
+                        IsHitTestVisible="False">
+                    <TextBlock x:Name="CoordinatesText"
+                               Foreground="#334155"
+                               Text="Фигура не выбрана." />
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </Window>
