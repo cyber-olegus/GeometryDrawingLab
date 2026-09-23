@@ -6,6 +6,7 @@
         Height="720"
         MinWidth="1060"
         MinHeight="640"
+        PreviewKeyDown="Window_PreviewKeyDown"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="Button">
@@ -113,6 +114,10 @@
                             <TextBox x:Name="MoveYTextBox" Grid.Column="3" Text="10" />
                         </Grid>
                         <Button Content="Переместить на ΔX и ΔY" Click="MoveFigure_Click" />
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="#64748B"
+                                   Text="Клавиатура: стрелки или W/A/S/D"
+                                   TextAlignment="Center" />
                         <Grid Margin="68,4,68,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -178,12 +183,25 @@
                 BorderBrush="#CBD5E1"
                 BorderThickness="1"
                 CornerRadius="8">
-            <Canvas x:Name="Scene"
-                    Width="680"
-                    Height="520"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Background="#F8FAFC" />
+            <Grid>
+                <Canvas x:Name="Scene"
+                        Width="680"
+                        Height="520"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="#F8FAFC" />
+                <Border Margin="12"
+                        Padding="8,5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Background="#E6FFFFFF"
+                        CornerRadius="5"
+                        IsHitTestVisible="False">
+                    <TextBlock x:Name="CoordinatesText"
+                               Foreground="#334155"
+                               Text="Фигура не выбрана." />
+                </Border>
+            </Grid>
         </Border>
     </Grid>
 </Window>
