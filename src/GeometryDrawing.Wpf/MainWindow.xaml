@@ -108,9 +108,9 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock VerticalAlignment="Center" Text="ΔX" />
-                            <TextBox x:Name="MoveXTextBox" Grid.Column="1" Text="10" />
+                            <TextBox x:Name="MoveXTextBox" Grid.Column="1" Text="15" />
                             <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="ΔY" />
-                            <TextBox x:Name="MoveYTextBox" Grid.Column="3" Text="10" />
+                            <TextBox x:Name="MoveYTextBox" Grid.Column="3" Text="15" />
                         </Grid>
                         <Button Content="Переместить на ΔX и ΔY" Click="MoveFigure_Click" />
                         <Grid Margin="68,4,68,0">
