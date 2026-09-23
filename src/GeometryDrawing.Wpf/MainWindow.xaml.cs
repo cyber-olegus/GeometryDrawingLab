@@ -14,10 +14,37 @@ public partial class MainWindow : Window
 
     private readonly Random _random = new();
     private IFigure? _currentFigure;
+    private Brush _lineBrush = Brushes.IndianRed;
+    private double _strokeThickness = 3;
 
     public MainWindow()
     {
         InitializeComponent();
+        LineColorComboBox.SelectionChanged += FigureStyle_Changed;
+        StrokeThicknessSlider.ValueChanged += FigureStyle_Changed;
+    }
+
+    private void FigureStyle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (LineColorComboBox.SelectedItem is ComboBoxItem { Tag: string colorName })
+        {
+            _lineBrush = colorName switch
+            {
+                "RoyalBlue" => Brushes.RoyalBlue,
+                "SeaGreen" => Brushes.SeaGreen,
+                "DarkViolet" => Brushes.DarkViolet,
+                "Black" => Brushes.Black,
+                _ => Brushes.IndianRed
+            };
+        }
+
+        _strokeThickness = StrokeThicknessSlider.Value;
+        DrawCurrentFigure();
+
+        if (_currentFigure is not null)
+        {
+            StatusText.Text = $"Стиль обновлён: толщина {_strokeThickness:0}.";
+        }
     }
 
     private void RandomTriangle_Click(object sender, RoutedEventArgs e)
@@ -314,8 +341,8 @@ public partial class MainWindow : Window
     {
         var line = new Line
         {
-            Stroke = Brushes.IndianRed,
-            StrokeThickness = 3,
+            Stroke = _lineBrush,
+            StrokeThickness = _strokeThickness,
             StrokeStartLineCap = PenLineCap.Round,
             StrokeEndLineCap = PenLineCap.Round,
             X1 = p1.X,
