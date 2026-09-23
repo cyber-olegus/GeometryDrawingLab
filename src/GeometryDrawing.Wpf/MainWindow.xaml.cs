@@ -103,6 +103,33 @@ public partial class MainWindow : Window
         StatusText.Text = $"Создан квадрат со стороной {side}.";
     }
 
+    private void MoveFigure_Click(object sender, RoutedEventArgs e)
+    {
+        if (!TryReadInteger(MoveXTextBox, "ΔX", out int deltaX)
+            || !TryReadInteger(MoveYTextBox, "ΔY", out int deltaY))
+        {
+            return;
+        }
+
+        MoveCurrentFigure(deltaX, deltaY);
+    }
+
+    private void NudgeFigure_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string movement })
+        {
+            return;
+        }
+
+        string[] parts = movement.Split(';');
+        if (parts.Length == 2
+            && int.TryParse(parts[0], out int deltaX)
+            && int.TryParse(parts[1], out int deltaY))
+        {
+            MoveCurrentFigure(deltaX, deltaY);
+        }
+    }
+
     private void ClearScene_Click(object sender, RoutedEventArgs e)
     {
         Scene.Children.Clear();
@@ -169,6 +196,29 @@ public partial class MainWindow : Window
         {
             ShowValidationError("Введённые значения слишком велики.");
         }
+    }
+
+    private void MoveCurrentFigure(int deltaX, int deltaY)
+    {
+        if (_currentFigure is null)
+        {
+            ShowValidationError("Сначала создайте фигуру.");
+            return;
+        }
+
+        if (!FigureMovement.TryMoveWithin(
+                _currentFigure,
+                deltaX,
+                deltaY,
+                SceneWidth,
+                SceneHeight))
+        {
+            ShowValidationError("После такого перемещения фигура выйдет за границы холста.");
+            return;
+        }
+
+        DrawCurrentFigure();
+        StatusText.Text = $"Фигура перемещена: ΔX = {deltaX}, ΔY = {deltaY}.";
     }
 
     private bool TryReadPoint(
